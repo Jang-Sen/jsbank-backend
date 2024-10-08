@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { BankService } from './bank.service';
 import { CreateBankDto } from './dto/create-bank.dto';
+import { UpdateBankDto } from './dto/update-bank.dto';
 
 @Controller('bank')
 export class BankController {
@@ -22,5 +31,17 @@ export class BankController {
   @Post('/create')
   async create(@Body() dto: CreateBankDto) {
     return await this.bankService.create(dto);
+  }
+
+  // 계좌 삭제 API
+  @Delete('/:id')
+  async delete(@Param('id') id: string) {
+    return await this.bankService.delete(id);
+  }
+
+  // 계좌 수정 API
+  @Put('/:id')
+  async update(@Param('id') id: string, @Body() dto: UpdateBankDto) {
+    return await this.bankService.update(id, dto);
   }
 }

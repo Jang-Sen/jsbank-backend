@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Bank } from './entities/bank.entity';
 import { Repository } from 'typeorm';
 import { CreateBankDto } from './dto/create-bank.dto';
+import { UpdateBankDto } from './dto/update-bank.dto';
 
 @Injectable()
 export class BankService {
@@ -28,6 +29,26 @@ export class BankService {
   async create(dto: CreateBankDto) {
     const bank = await this.repository.create(dto);
     await this.repository.save(bank);
+
+    return bank;
+  }
+
+  async delete(id: string) {
+    const bank = await this.repository.delete({ id });
+
+    if (!bank) {
+      throw new NotFoundException('찾을 수 없는 계좌입니다.');
+    }
+
+    return bank;
+  }
+
+  async update(id: string, dto: UpdateBankDto) {
+    const bank = await this.repository.update(id, dto);
+
+    if (!bank) {
+      throw new NotFoundException('찾을 수 없는 계좌입니다.');
+    }
 
     return bank;
   }
