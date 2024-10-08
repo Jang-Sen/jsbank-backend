@@ -30,9 +30,11 @@
     "@types/bcrypt": "^5.0.2",
     "@types/gravatar": "^1.8.6",
     "@types/hapi__joi": "^17.1.14",
+    "@types/nodemailer": "^6.4.16",
     "bcrypt": "^5.1.1",
     "gravatar": "^1.8.2",
     "mysql2": "^3.11.3",
+    "nodemailer": "^6.9.15",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20"

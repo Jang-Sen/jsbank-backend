@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import { LoginUserDto } from '../user/dto/login-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -9,6 +10,15 @@ export class AuthController {
   // 회원가입 API
   @Post('/signup')
   async signup(@Body() dto: CreateUserDto) {
-    return await this.authService.signup(dto);
+    const user = await this.authService.signup(dto);
+    await this.authService.signupMail(user.email);
+
+    return user;
+  }
+
+  // 로그인 API
+  @Post('/login')
+  async login(@Body() dto: LoginUserDto) {
+    return await this.authService.login(dto);
   }
 }

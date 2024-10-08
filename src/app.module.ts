@@ -6,6 +6,8 @@ import { BankModule } from './bank/bank.module';
 import { DataBaseModule } from './db/db.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { MailService } from './mail/mail.service';
+import { MailModule } from './mail/mail.module';
 import * as Joi from '@hapi/joi';
 
 @Module({
@@ -28,6 +30,9 @@ import * as Joi from '@hapi/joi';
         MYSQL_ROOT_PASSWORD: Joi.string().required(),
         MYSQL_DATABASE: Joi.string().required(),
         MYSQL_PORT: Joi.number().required(),
+        MAIL_SERVICE: Joi.string().required(),
+        MAIL_USER: Joi.string().required(),
+        MAIL_PASSWORD: Joi.string().required(),
       }),
       envFilePath: '.env', // .env 파일의 경로를 명시적으로 추가
       isGlobal: true, // 모든 모듈에서 ConfigService 사용 가능하게 함
@@ -36,8 +41,9 @@ import * as Joi from '@hapi/joi';
     DataBaseModule,
     UserModule,
     AuthModule,
+    MailModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MailService],
 })
 export class AppModule {}
