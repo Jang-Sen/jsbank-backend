@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { BankModule } from './bank/bank.module';
 import { DataBaseModule } from './db/db.module';
+import { UserModule } from './user/user.module';
 import * as Joi from '@hapi/joi';
 
 @Module({
@@ -32,6 +33,7 @@ import * as Joi from '@hapi/joi';
     }),
     BankModule,
     DataBaseModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
