@@ -1,9 +1,9 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
-import { LoginUserDto } from '../user/dto/login-user.dto';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import { RequestUserInterface } from './interface/requestUser.interface';
+import { TokenGuard } from './guard/token.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -26,5 +26,12 @@ export class AuthController {
     const token = this.authService.generateToken(user.id);
 
     return { user, token };
+  }
+
+  // 로그인 후, 토큰을 이용해 유저 정보 갖고오는 API
+  @UseGuards(TokenGuard)
+  @Get()
+  async authenticate(@Req() req: RequestUserInterface) {
+    return req.user;
   }
 }
