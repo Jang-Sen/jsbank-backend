@@ -2,20 +2,22 @@ import { BeforeInsert, Column, Entity } from 'typeorm';
 import { BaseEntity } from '../../bank/entities/base.entity';
 import * as bcrypt from 'bcrypt';
 import * as gravatar from 'gravatar';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User extends BaseEntity {
   @Column()
   public username: string;
 
-  @Column()
-  public password: string;
+  @Column({ nullable: true })
+  @Exclude()
+  public password?: string;
 
   @Column({ unique: true })
   public email: string;
 
-  @Column()
-  public phone: number;
+  @Column({ nullable: true })
+  public phone?: number;
 
   @Column({ nullable: true })
   public profileImg?: string;

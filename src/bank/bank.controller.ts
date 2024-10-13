@@ -10,7 +10,9 @@ import {
 import { BankService } from './bank.service';
 import { CreateBankDto } from './dto/create-bank.dto';
 import { UpdateBankDto } from './dto/update-bank.dto';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Bank')
 @Controller('bank')
 export class BankController {
   constructor(private readonly bankService: BankService) {}
@@ -28,6 +30,7 @@ export class BankController {
   }
 
   // 계좌 등록 api
+  @ApiBody({ type: CreateBankDto })
   @Post('/create')
   async create(@Body() dto: CreateBankDto) {
     return await this.bankService.create(dto);
@@ -40,6 +43,7 @@ export class BankController {
   }
 
   // 계좌 수정 API
+  @ApiBody({ type: CreateBankDto })
   @Put('/:id')
   async update(@Param('id') id: string, @Body() dto: UpdateBankDto) {
     return await this.bankService.update(id, dto);
