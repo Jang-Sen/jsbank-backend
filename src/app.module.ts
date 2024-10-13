@@ -33,6 +33,8 @@ import * as Joi from '@hapi/joi';
         MAIL_SERVICE: Joi.string().required(),
         MAIL_USER: Joi.string().required(),
         MAIL_PASSWORD: Joi.string().required(),
+        TOKEN_SECRET: Joi.string().required(),
+        TOKEN_TIME: Joi.string().required(),
       }),
       envFilePath: '.env', // .env 파일의 경로를 명시적으로 추가
       isGlobal: true, // 모든 모듈에서 ConfigService 사용 가능하게 함
