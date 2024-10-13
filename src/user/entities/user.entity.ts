@@ -1,8 +1,8 @@
 import { BeforeInsert, Column, Entity } from 'typeorm';
-import { BaseEntity } from '../../bank/entities/base.entity';
+import { Exclude } from 'class-transformer';
+import { BaseEntity } from '@bank/entities/base.entity';
 import * as bcrypt from 'bcrypt';
 import * as gravatar from 'gravatar';
-import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User extends BaseEntity {

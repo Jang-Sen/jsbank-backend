@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Bank } from './entities/bank.entity';
 import { Repository } from 'typeorm';
-import { CreateBankDto } from './dto/create-bank.dto';
-import { UpdateBankDto } from './dto/update-bank.dto';
+import { Bank } from '@bank/entities/bank.entity';
+import { CreateBankDto } from '@bank/dto/create-bank.dto';
+import { UpdateBankDto } from '@bank/dto/update-bank.dto';
 
 @Injectable()
 export class BankService {

@@ -7,10 +7,10 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { BankService } from './bank.service';
-import { CreateBankDto } from './dto/create-bank.dto';
-import { UpdateBankDto } from './dto/update-bank.dto';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { BankService } from '@bank/bank.service';
+import { CreateBankDto } from '@bank/dto/create-bank.dto';
+import { UpdateBankDto } from '@bank/dto/update-bank.dto';
 
 @ApiTags('Bank')
 @Controller('bank')
