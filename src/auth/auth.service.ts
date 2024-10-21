@@ -7,6 +7,7 @@ import { MailService } from '@mail/mail.service';
 import { CreateUserDto } from '@user/dto/create-user.dto';
 import { LoginUserDto } from '@user/dto/login-user.dto';
 import { TokenInterface } from '@auth/interface/token.interface';
+import { Provider } from '@user/entities/provider.enum';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,7 @@ export class AuthService {
 
   // 회원가입 로직
   async signup(dto: CreateUserDto) {
-    return await this.userService.create(dto);
+    return await this.userService.create({ ...dto, provider: Provider.LOCAL });
   }
 
   // 로그인 로직

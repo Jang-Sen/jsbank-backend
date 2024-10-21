@@ -56,10 +56,13 @@ export class AuthController {
     return HttpStatus.OK;
   }
 
-  // 구글 로그인 후 API
+  // 구글 로그인 API
   @UseGuards(GoogleAuthGuard)
   @Get('/google/callback')
   async googleLoginCallback(@Req() req: RequestUserInterface) {
-    return req.user;
+    const { user } = req;
+    const token = this.authService.generateToken(user.id);
+
+    return { user, token };
   }
 }
