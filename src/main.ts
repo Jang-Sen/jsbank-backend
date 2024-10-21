@@ -5,6 +5,9 @@ import { AppModule } from '@root/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.setGlobalPrefix('api'); // url api 추가
+
   // Swagger 설정
   const config = new DocumentBuilder()
     .setTitle('js_bank_api')

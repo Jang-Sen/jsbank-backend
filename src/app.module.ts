@@ -35,6 +35,9 @@ import { AppService } from '@root/app.service';
         MAIL_PASSWORD: Joi.string().required(),
         TOKEN_SECRET: Joi.string().required(),
         TOKEN_TIME: Joi.string().required(),
+        GOOGLE_CLIENT_ID: Joi.string().required(),
+        GOOGLE_CLIENT_SECRET: Joi.string().required(),
+        GOOGLE_CALLBACK_URL: Joi.string().required(),
       }),
       envFilePath: '.env', // .env 파일의 경로를 명시적으로 추가
       isGlobal: true, // 모든 모듈에서 ConfigService 사용 가능하게 함
