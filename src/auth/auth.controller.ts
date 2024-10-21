@@ -83,4 +83,10 @@ export class AuthController {
 
     return { user, token };
   }
+
+  // 이메일 인증번호 전송 API
+  @Post('/email/send')
+  async emailSendOTP(@Body('email') email: string) {
+    return this.authService.sendEmailOTP(email);
+  }
 }
