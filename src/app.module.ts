@@ -9,6 +9,7 @@ import { MailModule } from '@mail/mail.module';
 import { MailService } from '@mail/mail.service';
 import { AppController } from '@root/app.controller';
 import { AppService } from '@root/app.service';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -40,6 +41,11 @@ import { AppService } from '@root/app.service';
         GOOGLE_CALLBACK_URL: Joi.string().required(),
         KAKAO_CLIENT_ID: Joi.string().required(),
         KAKAO_CALLBACK_URL: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().required(),
+        // REDIS_USER: Joi.string().required(),
+        // REDIS_PASSWORD: Joi.string().required(),
+        REDIS_TTL: Joi.number().required(),
       }),
       envFilePath: '.env', // .env 파일의 경로를 명시적으로 추가
       isGlobal: true, // 모든 모듈에서 ConfigService 사용 가능하게 함
@@ -49,6 +55,7 @@ import { AppService } from '@root/app.service';
     UserModule,
     AuthModule,
     MailModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService],
