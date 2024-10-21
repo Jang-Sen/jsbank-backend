@@ -78,6 +78,9 @@ export class AuthController {
   @UseGuards(KakaoAuthGuard)
   @Get('/kakao/callback')
   async kakaoLoginCallback(@Req() req: RequestUserInterface) {
-    return req.user;
+    const user = req.user;
+    const token = this.authService.generateToken(user.id);
+
+    return { user, token };
   }
 }
