@@ -7,7 +7,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { AuthService } from '@auth/auth.service';
 import { CreateUserDto } from '@user/dto/create-user.dto';
 import { LocalAuthGuard } from '@auth/guard/local-auth.guard';
@@ -46,6 +46,7 @@ export class AuthController {
 
   // 로그인 후, 토큰을 이용해 유저 정보 갖고오는 API
   @UseGuards(TokenGuard)
+  @ApiBearerAuth()
   @Get()
   async authenticate(@Req() req: RequestUserInterface) {
     return req.user;

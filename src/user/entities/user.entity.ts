@@ -1,9 +1,10 @@
-import { BeforeInsert, Column, Entity } from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { BaseEntity } from '@bank/entities/base.entity';
 import * as bcrypt from 'bcrypt';
 import * as gravatar from 'gravatar';
 import { Provider } from '@user/entities/provider.enum';
+import { AgreeOfTerm } from '@root/agree-of-term/entities/agree-of-term.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -29,6 +30,13 @@ export class User extends BaseEntity {
     default: Provider.LOCAL,
   })
   public provider: Provider;
+
+  @OneToOne(() => AgreeOfTerm, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn()
+  public agreeOfTerm: AgreeOfTerm;
 
   @BeforeInsert()
   async beforeFunction() {

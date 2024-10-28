@@ -12,6 +12,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('js_bank_api')
     .setDescription('js_bank_api')
+    .addBearerAuth()
     .setVersion('1.0')
     .addTag('bank')
     .build();
