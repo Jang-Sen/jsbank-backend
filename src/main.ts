@@ -3,11 +3,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { AppModule } from '@root/app.module';
 import { TransformInterceptor } from '@root/common/interceptor/transform.interceptor';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api'); // url api 추가
+  app.use(cookieParser());
 
   // Swagger 설정
   const config = new DocumentBuilder()

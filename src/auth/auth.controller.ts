@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
@@ -21,6 +22,7 @@ import { EmailDto } from '@user/dto/email.dto';
 import { NewPasswordDto } from '@user/dto/new-password.dto';
 import { UserService } from '@user/user.service';
 import { RefreshTokenGuard } from '@auth/guard/refresh-token.guard';
+import { Response } from 'express';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -44,15 +46,25 @@ export class AuthController {
   @ApiBody({ type: LoginUserDto })
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Req() req: RequestUserInterface) {
+  async login(@Req() req: RequestUserInterface, @Res() res: Response) {
     const user = req.user;
-    const accessToken = this.authService.generateToken(user.id, 'access');
-    const refreshToken = this.authService.generateToken(user.id, 'refresh');
+
+    // Access Token & Cookie
+    const { token: accessToken, cookie: accessTokenCookie } =
+      this.authService.generateToken(user.id, 'access');
+
+    // Refresh Token & Cookie
+    const { token: refreshToken, cookie: refreshTokenCookie } =
+      this.authService.generateToken(user.id, 'refresh');
 
     // Refresh Token 발급 후, Redis에 저장
     await this.userService.refreshTokenSaveRedis(user.id, refreshToken);
 
-    return { user, accessToken, refreshToken };
+    // cookie
+    res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]);
+
+    // return { user, accessToken, refreshToken };
+    res.send(user);
   }
 
   // Access Token을 갱신하기 위한 Refresh Token API
@@ -60,9 +72,12 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   async refresh(@Req() req: RequestUserInterface) {
     const user = req.user;
-    const accessToken = this.authService.generateToken(user.id, 'access');
+    const { token: accessToken, cookie: accessTokenCookie } =
+      this.authService.generateToken(user.id, 'access');
 
-    return accessToken;
+    req.res.setHeader('Set-Cookie', [accessTokenCookie]);
+
+    return user;
   }
 
   // 로그인 후, 토큰을 이용해 유저 정보 갖고오는 API

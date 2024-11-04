@@ -52,7 +52,10 @@ export class AuthService {
   }
 
   // 토큰 발행 로직
-  public generateToken(userId: string, tokenType: 'access' | 'refresh') {
+  public generateToken(
+    userId: string,
+    tokenType: 'access' | 'refresh',
+  ): { token: string; cookie: string } {
     const load: TokenInterface = { userId };
     // const token = this.jwtService.sign(load, {
     //   secret: this.configService.get('TOKEN_SECRET'),
@@ -67,12 +70,16 @@ export class AuthService {
       tokenType === 'access' ? 'TOKEN_TIME' : 'REFRESH_TOKEN_TIME',
     );
 
+    const cookieName = tokenType === 'access' ? 'Authentication' : 'Refresh';
+
     const token = this.jwtService.sign(load, {
       secret,
       expiresIn,
     });
 
-    return token;
+    const cookie = `${cookieName}=${token}; Path=/; Max-Age=${expiresIn}`;
+
+    return { token, cookie };
   }
 
   // 이메일 OTP 로직
