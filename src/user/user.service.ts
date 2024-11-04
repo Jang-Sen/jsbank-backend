@@ -91,19 +91,19 @@ export class UserService {
   }
 
   // Refresh Token 검증 로직
-  // async refreshTokenMatch(userId: string, refreshToken: string) {
-  //   // userId 검사
-  //   const user = await this.getUserBy('id', userId);
-  //   const userIdFromRedis = await this.cacheManager.get(user.id);
-  //
-  //   // 암호화된 토큰 검사
-  //   const refreshTokenMatch = await bcrypt.compare(
-  //     refreshToken,
-  //     userIdFromRedis,
-  //   );
-  //
-  //   if (refreshTokenMatch) {
-  //     return user;
-  //   }
-  // }
+  async refreshTokenMatch(userId: string, refreshToken: string) {
+    // userId 검사
+    const user = await this.getUserBy('id', userId);
+    const userIdFromRedis = await this.cacheManager.get(user.id);
+
+    // 암호화된 토큰 검사
+    const refreshTokenMatch = await bcrypt.compare(
+      refreshToken,
+      userIdFromRedis,
+    );
+
+    if (refreshTokenMatch) {
+      return user;
+    }
+  }
 }

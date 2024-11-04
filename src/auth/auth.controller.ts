@@ -20,6 +20,7 @@ import { NaverAuthGuard } from '@auth/guard/naver-auth.guard';
 import { EmailDto } from '@user/dto/email.dto';
 import { NewPasswordDto } from '@user/dto/new-password.dto';
 import { UserService } from '@user/user.service';
+import { RefreshTokenGuard } from '@auth/guard/refresh-token.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -52,6 +53,16 @@ export class AuthController {
     await this.userService.refreshTokenSaveRedis(user.id, refreshToken);
 
     return { user, accessToken, refreshToken };
+  }
+
+  // Access Token을 갱신하기 위한 Refresh Token API
+  @Get('/refresh')
+  @UseGuards(RefreshTokenGuard)
+  async refresh(@Req() req: RequestUserInterface) {
+    const user = req.user;
+    const accessToken = this.authService.generateToken(user.id, 'access');
+
+    return accessToken;
   }
 
   // 로그인 후, 토큰을 이용해 유저 정보 갖고오는 API
