@@ -48,6 +48,8 @@ import { AgreeOfTermModule } from './agree-of-term/agree-of-term.module';
 
         TOKEN_SECRET: Joi.string().required(),
         TOKEN_TIME: Joi.string().required(),
+        REFRESH_TOKEN_SECRET: Joi.string().required(),
+        REFRESH_TOKEN_TIME: Joi.string().required(),
 
         GOOGLE_CLIENT_ID: Joi.string().required(),
         GOOGLE_CLIENT_SECRET: Joi.string().required(),

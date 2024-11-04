@@ -52,11 +52,24 @@ export class AuthService {
   }
 
   // 토큰 발행 로직
-  public generateToken(userId: string) {
+  public generateToken(userId: string, tokenType: 'access' | 'refresh') {
     const load: TokenInterface = { userId };
+    // const token = this.jwtService.sign(load, {
+    //   secret: this.configService.get('TOKEN_SECRET'),
+    //   expiresIn: this.configService.get('TOKEN_TIME'),
+    // });
+    //
+    // return token;
+    const secret = this.configService.get(
+      tokenType === 'access' ? 'TOKEN_SECRET' : 'REFRESH_TOKEN_SECRET',
+    );
+    const expiresIn = this.configService.get(
+      tokenType === 'access' ? 'TOKEN_TIME' : 'REFRESH_TOKEN_TIME',
+    );
+
     const token = this.jwtService.sign(load, {
-      secret: this.configService.get('TOKEN_SECRET'),
-      expiresIn: this.configService.get('TOKEN_TIME'),
+      secret,
+      expiresIn,
     });
 
     return token;

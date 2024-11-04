@@ -2,6 +2,7 @@ import {
   BadRequestException,
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -13,6 +14,8 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Provider } from '@user/entities/provider.enum';
 import * as bcrypt from 'bcrypt';
+import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/common/cache';
 
 @Injectable()
 export class UserService {
@@ -21,6 +24,7 @@ export class UserService {
     private repository: Repository<User>,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   // 회원 등록 로직
@@ -75,4 +79,31 @@ export class UserService {
 
     return 'Updated New Password.';
   }
+
+  // Redis에 Refresh Token 저장 로직
+  async refreshTokenSaveRedis(userId: string, refreshToken: string) {
+    // Refresh Token 암호화
+    const genSalt = await bcrypt.genSalt(10);
+    const hashesRefreshToken = await bcrypt.hash(refreshToken, genSalt);
+
+    // Redis에 userId에 대한 암호화한 Refresh Token 저장
+    await this.cacheManager.set(userId, hashesRefreshToken);
+  }
+
+  // Refresh Token 검증 로직
+  // async refreshTokenMatch(userId: string, refreshToken: string) {
+  //   // userId 검사
+  //   const user = await this.getUserBy('id', userId);
+  //   const userIdFromRedis = await this.cacheManager.get(user.id);
+  //
+  //   // 암호화된 토큰 검사
+  //   const refreshTokenMatch = await bcrypt.compare(
+  //     refreshToken,
+  //     userIdFromRedis,
+  //   );
+  //
+  //   if (refreshTokenMatch) {
+  //     return user;
+  //   }
+  // }
 }

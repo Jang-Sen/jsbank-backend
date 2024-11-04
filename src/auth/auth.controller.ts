@@ -45,9 +45,13 @@ export class AuthController {
   @Post('/login')
   async login(@Req() req: RequestUserInterface) {
     const user = req.user;
-    const token = this.authService.generateToken(user.id);
+    const accessToken = this.authService.generateToken(user.id, 'access');
+    const refreshToken = this.authService.generateToken(user.id, 'refresh');
 
-    return { user, token };
+    // Refresh Token 발급 후, Redis에 저장
+    await this.userService.refreshTokenSaveRedis(user.id, refreshToken);
+
+    return { user, accessToken, refreshToken };
   }
 
   // 로그인 후, 토큰을 이용해 유저 정보 갖고오는 API
@@ -70,7 +74,7 @@ export class AuthController {
   @Get('/google/callback')
   async googleLoginCallback(@Req() req: RequestUserInterface) {
     const { user } = req;
-    const token = this.authService.generateToken(user.id);
+    const token = this.authService.generateToken(user.id, 'access');
 
     return { user, token };
   }
@@ -87,7 +91,7 @@ export class AuthController {
   @Get('/kakao/callback')
   async kakaoLoginCallback(@Req() req: RequestUserInterface) {
     const user = req.user;
-    const token = this.authService.generateToken(user.id);
+    const token = this.authService.generateToken(user.id, 'access');
 
     return { user, token };
   }
@@ -104,7 +108,7 @@ export class AuthController {
   @UseGuards(NaverAuthGuard)
   async naverLoginCallback(@Req() req: RequestUserInterface) {
     const user = req.user;
-    const token = this.authService.generateToken(user.id);
+    const token = this.authService.generateToken(user.id, 'access');
 
     return { user, token };
   }
