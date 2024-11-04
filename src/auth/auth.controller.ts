@@ -17,11 +17,17 @@ import { LoginUserDto } from '@user/dto/login-user.dto';
 import { GoogleAuthGuard } from '@auth/guard/google-auth.guard';
 import { KakaoAuthGuard } from '@auth/guard/kakao-auth.guard';
 import { NaverAuthGuard } from '@auth/guard/naver-auth.guard';
+import { EmailDto } from '@user/dto/email.dto';
+import { NewPasswordDto } from '@user/dto/new-password.dto';
+import { UserService } from '@user/user.service';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
 
   // 회원가입 API
   @ApiBody({ type: CreateUserDto })
@@ -107,5 +113,18 @@ export class AuthController {
   @Post('/email/send')
   async emailSendOTP(@Body('email') email: string) {
     return this.authService.sendEmailOTP(email);
+  }
+
+  @Post('/find/password')
+  async findPassword(@Body() dto: EmailDto) {
+    return await this.authService.findPasswordSendEmail(dto.email);
+  }
+
+  @Post('/change/password')
+  async changePassword(@Body() dto: NewPasswordDto) {
+    return await this.userService.changePasswordWithToken(
+      dto.token,
+      dto.password,
+    );
   }
 }

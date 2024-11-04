@@ -75,6 +75,36 @@ export class AuthService {
     });
   }
 
+  // 비밀번호 변경 url 이메일 전송 로직
+  async findPasswordSendEmail(email: string) {
+    const payload = { email };
+    const user = await this.userService.getUserBy('email', email);
+
+    // 소셜 로그인 회원은 이용 불가
+    if (user.provider !== Provider.LOCAL) {
+      throw new HttpException(
+        `소셜 로그인 회원은 이용하실 수 없습니다.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    // 비밀번호 변경 관련 토큰 생성
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('FIND_PASSWORD_TOKEN_SECRET'),
+      expiresIn: this.configService.get('FIND_PASSWORD_TOKEN_TIME'),
+    });
+
+    // 비밀번호 변경 주소
+    const url = `${this.configService.get('EMAIL_BASE_URL')}/change/password?token=${token}`;
+
+    // 이메일 전송
+    await this.mailService.sendMail({
+      to: email,
+      subject: 'js_bank 비밀번호 변경 주소입니다.',
+      text: `비밀번호 변경 주소: ${url}`,
+    });
+  }
+
   // 이메일 인증 랜덤 번호 로직
   generateOTP() {
     let otp = '';
