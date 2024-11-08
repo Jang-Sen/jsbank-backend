@@ -98,11 +98,21 @@ export class AuthController {
   // 구글 로그인 API
   @UseGuards(GoogleAuthGuard)
   @Get('/google/callback')
-  async googleLoginCallback(@Req() req: RequestUserInterface) {
+  async googleLoginCallback(
+    @Req() req: RequestUserInterface,
+    @Res() res: Response,
+  ) {
     const { user } = req;
-    const token = this.authService.generateToken(user.id, 'access');
+    const { token: accessToken, cookie: accessCookie } =
+      this.authService.generateToken(user.id, 'access');
+    const { token: refreshToken, cookie: refreshCookie } =
+      this.authService.generateToken(user.id, 'refresh');
 
-    return { user, token };
+    await this.userService.refreshTokenSaveRedis(user.id, refreshToken);
+
+    res.setHeader('Set-Cookie', [accessCookie, refreshCookie]);
+
+    res.send(user);
   }
 
   // 카카오 로그인 API
@@ -117,9 +127,18 @@ export class AuthController {
   @Get('/kakao/callback')
   async kakaoLoginCallback(@Req() req: RequestUserInterface) {
     const user = req.user;
-    const token = this.authService.generateToken(user.id, 'access');
+    const { cookie: accessCookie } = this.authService.generateToken(
+      user.id,
+      'access',
+    );
+    const { token: refreshToken, cookie: refreshCookie } =
+      this.authService.generateToken(user.id, 'refresh');
 
-    return { user, token };
+    await this.userService.refreshTokenSaveRedis(user.id, refreshToken);
+
+    req.res.setHeader('Set-Cookie', [accessCookie, refreshCookie]);
+
+    req.res.send(user);
   }
 
   // 네이버 로그인 API
@@ -134,9 +153,18 @@ export class AuthController {
   @UseGuards(NaverAuthGuard)
   async naverLoginCallback(@Req() req: RequestUserInterface) {
     const user = req.user;
-    const token = this.authService.generateToken(user.id, 'access');
+    const { cookie: accessCookie } = this.authService.generateToken(
+      user.id,
+      'access',
+    );
+    const { token: refreshToken, cookie: refreshCookie } =
+      this.authService.generateToken(user.id, 'refresh');
 
-    return { user, token };
+    await this.userService.refreshTokenSaveRedis(user.id, refreshToken);
+
+    req.res.setHeader('Set-Cookie', [accessCookie, refreshCookie]);
+
+    req.res.send(user);
   }
 
   // 이메일 인증번호 전송 API

@@ -15,6 +15,7 @@ services:
   js_redis:
     container_name: js_redis
     image: "redis:alpine"
+    restart: always
     env_file:
       - .env
     ports:
