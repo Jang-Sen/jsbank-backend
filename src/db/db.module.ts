@@ -21,7 +21,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         host: c.get('MYSQL_HOST'),
         port: c.get('MYSQL_PORT'),
         username: c.get('MYSQL_USER'),
-        password: c.get('MYSQL_ROOT_PASSWORD'),
+        password: c.get('MYSQL_PASSWORD'),
         database: c.get('MYSQL_DATABASE'),
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         autoLoadEntities: true,

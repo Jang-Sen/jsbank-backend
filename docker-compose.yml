@@ -1,4 +1,23 @@
 services:
+  backend:
+    container_name: js_backend
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 8011:8011
+    command: npm run start:dev
+    env_file:
+      - .env
+    networks:
+      - js_bank_network
+    depends_on:
+      - js_mysql
+      - js_redis
+  
   js_mysql:
     container_name: js_mysql
     image: mysql:latest
@@ -11,6 +30,8 @@ services:
     ports:
       #      - ${MYSQL_PORT}:${MYSQL_PORT}
       - 3307:3306
+    networks:
+      - js_bank_network
 
   js_redis:
     container_name: js_redis
@@ -20,3 +41,9 @@ services:
       - .env
     ports:
       - 6380:6379
+    networks:
+      - js_bank_network
+
+networks:
+  js_bank_network:
+    driver: bridge
