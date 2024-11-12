@@ -1,4 +1,17 @@
 services:
+  nginx:
+    container_name: js_nginx
+    image: nginx:stable-alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/templates:/etc/nginx/templates
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - js_bank_network
+
   backend:
     container_name: js_backend
     build:
@@ -8,32 +21,31 @@ services:
     volumes:
       - .:/usr/src/app
     ports:
-      - 8011:8011
+      - ${BACKEND_PORT}:${BACKEND_PORT}
     command: npm run start:dev
     env_file:
       - .env
     networks:
       - js_bank_network
     depends_on:
-      - js_mysql
-      - js_redis
-  
-  js_mysql:
+      - mysql
+      - redis
+
+  mysql:
     container_name: js_mysql
     image: mysql:latest
     restart: always
     env_file:
       - .env
     environment:
-      MYSQL_ROOT_PASSWORD: pass_js
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       TZ: Asia/Seoul
     ports:
-      #      - ${MYSQL_PORT}:${MYSQL_PORT}
       - ${MYSQL_EXTERNAL_PORT}:${MYSQL_PORT}
     networks:
       - js_bank_network
 
-  js_redis:
+  redis:
     container_name: js_redis
     image: "redis:alpine"
     restart: always
