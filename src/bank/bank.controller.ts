@@ -6,11 +6,14 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { BankService } from '@bank/bank.service';
 import { CreateBankDto } from '@bank/dto/create-bank.dto';
 import { UpdateBankDto } from '@bank/dto/update-bank.dto';
+import { RoleGuard } from '@auth/guard/role.guard';
+import { Role } from '@user/entities/role.enum';
 
 @ApiTags('Bank')
 @Controller('bank')
@@ -38,13 +41,15 @@ export class BankController {
 
   // 계좌 삭제 API
   @Delete('/:id')
+  @UseGuards(RoleGuard(Role.ADMIN))
   async delete(@Param('id') id: string) {
     return await this.bankService.delete(id);
   }
 
   // 계좌 수정 API
-  @ApiBody({ type: CreateBankDto })
   @Put('/:id')
+  @UseGuards(RoleGuard(Role.ADMIN))
+  @ApiBody({ type: CreateBankDto })
   async update(@Param('id') id: string, @Body() dto: UpdateBankDto) {
     return await this.bankService.update(id, dto);
   }

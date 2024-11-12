@@ -5,6 +5,7 @@ import * as bcrypt from 'bcryptjs';
 import * as gravatar from 'gravatar';
 import { Provider } from '@user/entities/provider.enum';
 import { AgreeOfTerm } from '@root/agree-of-term/entities/agree-of-term.entity';
+import { Role } from '@user/entities/role.enum';
 
 @Entity()
 export class User extends BaseEntity {
@@ -38,6 +39,13 @@ export class User extends BaseEntity {
   @JoinColumn()
   public agreeOfTerm: AgreeOfTerm;
 
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.USER,
+  })
+  public role: Role;
+
   @BeforeInsert()
   async beforeFunction() {
     try {
@@ -49,7 +57,7 @@ export class User extends BaseEntity {
         this.password = await bcrypt.hash(this.password, saltValue);
 
         // 프로필 사진 자동생성
-        this.profileImg = await gravatar.url(this.email, {
+        this.profileImg = gravatar.url(this.email, {
           s: '200',
           r: 'pg',
           d: 'mm',
