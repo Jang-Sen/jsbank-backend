@@ -4,6 +4,9 @@ import { Repository } from 'typeorm';
 import { Bank } from '@bank/entities/bank.entity';
 import { CreateBankDto } from '@bank/dto/create-bank.dto';
 import { UpdateBankDto } from '@bank/dto/update-bank.dto';
+import { PageDto } from '@common/dto/page.dto';
+import { PageOptionsDto } from '@common/dto/page-options.dto';
+import { PageMetaDto } from '@common/dto/page-meta.dto';
 
 @Injectable()
 export class BankService {
@@ -12,8 +15,20 @@ export class BankService {
     private repository: Repository<Bank>,
   ) {}
 
-  async getAll() {
-    return await this.repository.find();
+  async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Bank>> {
+    // return await this.repository.find();
+    const queryBuilder = this.repository.createQueryBuilder('bank');
+    queryBuilder
+      .orderBy('bank.createAt', pageOptionsDto.order)
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take);
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({ pageOptionsDto, itemCount });
+
+    return new PageDto(entities, pageMetaDto);
   }
 
   async getBankById(id: string) {
@@ -27,7 +42,7 @@ export class BankService {
   }
 
   async create(dto: CreateBankDto) {
-    const bank = await this.repository.create(dto);
+    const bank = this.repository.create(dto);
     await this.repository.save(bank);
 
     return bank;

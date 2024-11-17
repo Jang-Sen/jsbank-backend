@@ -44,6 +44,7 @@ export class User extends BaseEntity {
     enum: Role,
     default: Role.USER,
   })
+  @Exclude()
   public role: Role;
 
   @BeforeInsert()

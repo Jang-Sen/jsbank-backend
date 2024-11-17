@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
@@ -14,6 +15,9 @@ import { CreateBankDto } from '@bank/dto/create-bank.dto';
 import { UpdateBankDto } from '@bank/dto/update-bank.dto';
 import { RoleGuard } from '@auth/guard/role.guard';
 import { Role } from '@user/entities/role.enum';
+import { PageDto } from '@common/dto/page.dto';
+import { Bank } from '@bank/entities/bank.entity';
+import { PageOptionsDto } from '@common/dto/page-options.dto';
 
 @ApiTags('Bank')
 @Controller('bank')
@@ -22,8 +26,10 @@ export class BankController {
 
   // 전체 조회 api
   @Get('/all')
-  async getAll() {
-    return await this.bankService.getAll();
+  async getAll(
+    @Query() pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<Bank>> {
+    return await this.bankService.getAll(pageOptionsDto);
   }
 
   // 상세 조회 api
