@@ -4,6 +4,12 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class PageOptionsDto {
   @IsOptional()
+  @ApiPropertyOptional({
+    description: '검색어',
+  })
+  readonly keyword: string;
+
+  @IsOptional()
   @IsEnum(Order)
   @ApiPropertyOptional({
     description: '정렬 기준(기본적으로 오름차순)',
