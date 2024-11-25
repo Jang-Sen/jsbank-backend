@@ -18,6 +18,16 @@ export class BankService {
   async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Bank>> {
     // return await this.repository.find();
     const queryBuilder = this.repository.createQueryBuilder('bank');
+
+    if (pageOptionsDto.keyword) {
+      queryBuilder.andWhere(
+        'bank.bankName LIKE :keyword OR bank.name = :keyword',
+        {
+          keyword: `%${pageOptionsDto.keyword}%`,
+        },
+      );
+    }
+
     queryBuilder
       .orderBy('bank.createAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)

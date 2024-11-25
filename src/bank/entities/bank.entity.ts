@@ -1,8 +1,8 @@
 import { Column, Entity } from 'typeorm';
-import { BaseEntity } from '@bank/entities/base.entity';
+import { Base } from '@common/entities/base.entity';
 
 @Entity()
-export class Bank extends BaseEntity {
+export class Bank extends Base {
   @Column()
   public bankName: string;
 

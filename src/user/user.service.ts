@@ -44,8 +44,8 @@ export class UserService {
     const queryBuilder = this.repository.createQueryBuilder('user');
 
     if (pageOptionsDto.keyword) {
-      queryBuilder.andWhere('user.username = :username', {
-        username: pageOptionsDto.keyword,
+      queryBuilder.andWhere('user.username LIKE :username', {
+        username: `%${pageOptionsDto.keyword}%`,
       });
     }
 
