@@ -11,6 +11,7 @@ import { AppController } from '@root/app.controller';
 import { AppService } from '@root/app.service';
 import { RedisModule } from './redis/redis.module';
 import { AgreeOfTermModule } from './agree-of-term/agree-of-term.module';
+import { MinioClientModule } from './minio-client/minio-client.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { AgreeOfTermModule } from './agree-of-term/agree-of-term.module';
     MailModule,
     RedisModule,
     AgreeOfTermModule,
+    MinioClientModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService],

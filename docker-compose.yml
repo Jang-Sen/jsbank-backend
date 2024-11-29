@@ -33,6 +33,7 @@ services:
     depends_on:
       - mysql
       - redis
+      - minio
 
   mysql:
     container_name: js_mysql
@@ -56,6 +57,18 @@ services:
       - .env
     ports:
       - ${REDIS_EXTERNAL_PORT}:${REDIS_PORT}
+    networks:
+      - js_bank_network
+
+  minio:
+    container_name: js_minio
+    image: docker.io/bitnami/minio:2022
+    platform: linux/amd64
+    env_file:
+      - docker.env
+    ports:
+      - "9000:9000"
+      - "9001:9001"
     networks:
       - js_bank_network
 

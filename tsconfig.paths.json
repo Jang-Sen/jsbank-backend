@@ -17,6 +17,9 @@
       "@mail/*": [
         "./src/mail/*"
       ],
+      "minio-client/*": [
+        "./src/minio-client/*"
+      ],
       "@user/*": [
         "./src/user/*"
       ],
