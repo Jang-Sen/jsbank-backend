@@ -35,11 +35,18 @@ import { MinioClientModule } from './minio-client/minio-client.module';
         MYSQL_PASSWORD: Joi.string().required(),
         MYSQL_DATABASE: Joi.string().required(),
         MYSQL_PORT: Joi.number().required(),
+
         REDIS_HOST: Joi.string().required(),
         REDIS_PORT: Joi.number().required(),
         // REDIS_USER: Joi.string().required(),
         // REDIS_PASSWORD: Joi.string().required(),
         REDIS_TTL: Joi.number().required(),
+
+        MINIO_PORT: Joi.number().required(),
+        MINIO_ENDPOINT: Joi.string().required(),
+        MINIO_ACCESS_KEY: Joi.string().required(),
+        MINIO_SECRET_KEY: Joi.string().required(),
+        MINIO_BUCKET: Joi.string().required(),
 
         MAIL_SERVICE: Joi.string().required(),
         MAIL_USER: Joi.string().required(),
