@@ -11,4 +11,7 @@ export class Bank extends Base {
 
   @Column()
   public amount: number;
+
+  @Column({ nullable: true })
+  public bankImg?: string;
 }

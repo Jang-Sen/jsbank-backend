@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateBankDto {
   @IsString()
@@ -13,9 +14,15 @@ export class CreateBankDto {
   user: string;
 
   @IsNumber()
+  @Type(() => Number)
   @IsNotEmpty()
   @ApiProperty({
     example: 50000,
   })
   amount: number;
+
+  @IsString()
+  @IsOptional()
+  @ApiPropertyOptional({ example: 'bank.png' })
+  bankImg?: string;
 }

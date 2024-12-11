@@ -137,7 +137,7 @@ export class UserService {
     }
   }
 
-  //
+  // 유저의 토큰을 이용해 회원 확인 후, 정보 수정(프로필 사진 수정)
   async updateUserInfoByToken(
     user: User,
     img: BufferedFile,

@@ -7,14 +7,18 @@ import { UpdateBankDto } from '@bank/dto/update-bank.dto';
 import { PageDto } from '@common/dto/page.dto';
 import { PageOptionsDto } from '@common/dto/page-options.dto';
 import { PageMetaDto } from '@common/dto/page-meta.dto';
+import { BufferedFile } from 'minio-client/interface/file.model';
+import { MinioClientService } from 'minio-client/minio-client.service';
 
 @Injectable()
 export class BankService {
   constructor(
     @InjectRepository(Bank)
     private repository: Repository<Bank>,
+    private readonly minioClientService: MinioClientService,
   ) {}
 
+  // 은행 전체 조회
   async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Bank>> {
     // return await this.repository.find();
     const queryBuilder = this.repository.createQueryBuilder('bank');
@@ -41,6 +45,7 @@ export class BankService {
     return new PageDto(entities, pageMetaDto);
   }
 
+  // 은행 상세 조회
   async getBankById(id: string) {
     const bank = await this.repository.findOneBy({ id: id });
 
@@ -51,6 +56,7 @@ export class BankService {
     return bank;
   }
 
+  // 계좌 생성
   async create(dto: CreateBankDto) {
     const bank = this.repository.create(dto);
     await this.repository.save(bank);
@@ -58,23 +64,39 @@ export class BankService {
     return bank;
   }
 
-  async delete(id: string) {
-    const bank = await this.repository.delete({ id });
+  // 계좌 삭제
+  async delete(id: string): Promise<string> {
+    const result = await this.repository.delete({ id });
 
-    if (!bank) {
+    if (!result.affected) {
       throw new NotFoundException('찾을 수 없는 계좌입니다.');
     }
 
-    return bank;
+    return '삭제 완료';
   }
 
-  async update(id: string, dto: UpdateBankDto) {
-    const bank = await this.repository.update(id, dto);
+  // 계좌 수정
+  async update(
+    id: string,
+    dto?: UpdateBankDto,
+    img?: BufferedFile,
+  ): Promise<string> {
+    const bank = await this.getBankById(id);
+    const uploadUrl = await this.minioClientService.uploadBankImg(
+      bank,
+      img,
+      'bank',
+    );
 
-    if (!bank) {
+    const result = await this.repository.update(id, {
+      ...dto,
+      bankImg: uploadUrl,
+    });
+
+    if (!result.affected) {
       throw new NotFoundException('찾을 수 없는 계좌입니다.');
     }
 
-    return bank;
+    return '수정 완료';
   }
 }
