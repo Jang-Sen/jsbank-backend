@@ -1,6 +1,10 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  ValidationPipe,
+  VersioningType,
+} from '@nestjs/common';
 import { AppModule } from '@root/app.module';
 import { TransformInterceptor } from '@root/common/interceptor/transform.interceptor';
 import * as cookieParser from 'cookie-parser';
@@ -11,6 +15,11 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api'); // url api 추가
   app.use(cookieParser()); // cookie 적용
+  // url 버저닝 적용
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  });
 
   // port
   const configService: ConfigService = app.get(ConfigService);

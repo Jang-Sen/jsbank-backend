@@ -24,7 +24,7 @@ import { BufferedFile } from 'minio-client/interface/file.model';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Bank')
-@Controller('bank')
+@Controller({ path: 'bank', version: '2' })
 export class BankController {
   constructor(private readonly bankService: BankService) {}
 
