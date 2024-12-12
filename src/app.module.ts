@@ -13,6 +13,7 @@ import { RedisModule } from './redis/redis.module';
 import { AgreeOfTermModule } from './agree-of-term/agree-of-term.module';
 import { MinioClientModule } from './minio-client/minio-client.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -74,6 +75,13 @@ import { ThrottlerModule } from '@nestjs/throttler';
       envFilePath: '.env', // .env 파일의 경로를 명시적으로 추가
       isGlobal: true, // 모든 모듈에서 ConfigService 사용 가능하게 함
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 60초 동안 ( ttl 1초 = 1000)
+        limit: 10, // 10번 적용
+      },
+    ]),
+    ScheduleModule.forRoot(),
     BankModule,
     DataBaseModule,
     UserModule,
@@ -82,12 +90,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
     RedisModule,
     AgreeOfTermModule,
     MinioClientModule,
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000, // 60초 동안 ( ttl 1초 = 1000)
-        limit: 10, // 10번 적용
-      },
-    ]),
   ],
   controllers: [AppController],
   providers: [AppService, MailService],
