@@ -12,6 +12,7 @@ import { AppService } from '@root/app.service';
 import { RedisModule } from './redis/redis.module';
 import { AgreeOfTermModule } from './agree-of-term/agree-of-term.module';
 import { MinioClientModule } from './minio-client/minio-client.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -81,6 +82,12 @@ import { MinioClientModule } from './minio-client/minio-client.module';
     RedisModule,
     AgreeOfTermModule,
     MinioClientModule,
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 60초 동안 ( ttl 1초 = 1000)
+        limit: 10, // 10번 적용
+      },
+    ]),
   ],
   controllers: [AppController],
   providers: [AppService, MailService],
