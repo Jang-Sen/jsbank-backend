@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -21,7 +22,7 @@ export class CommentController {
   // 댓글 등록
   @Post('/:bankId')
   @UseGuards(TokenGuard)
-  @ApiParam({ name: 'id', description: '은행 ID' })
+  @ApiParam({ name: 'bankId', description: '은행 ID' })
   async createComment(
     @Req() req: RequestUserInterface,
     @Param('bankId') bankId: string,
@@ -42,5 +43,16 @@ export class CommentController {
   @ApiParam({ name: 'bankId', description: '은행 ID' })
   async findCommentByBankId(@Param('bankId') bankId: string) {
     return await this.commentService.findCommentByBankId(bankId);
+  }
+
+  // 댓글 삭제(작성자만)
+  @Delete('/:id')
+  @UseGuards(TokenGuard)
+  @ApiParam({ name: 'id', description: '댓글 ID' })
+  async deleteCommentOnlySelf(
+    @Req() req: RequestUserInterface,
+    @Param('id') id: string,
+  ) {
+    return await this.commentService.deleteCommentOnlySelf(req.user, id);
   }
 }

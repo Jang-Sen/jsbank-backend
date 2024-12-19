@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Comment } from '@comment/entities/comment.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -59,5 +63,27 @@ export class CommentService {
     });
 
     return comments;
+  }
+
+  // 삭제(작성자 본인만)
+  async deleteCommentOnlySelf(user: User, id: string): Promise<string> {
+    const comment = await this.repository.findOne({
+      where: {
+        id,
+      },
+      relations: ['user'],
+    });
+
+    if (!comment) {
+      throw new NotFoundException('댓글을 찾을 수 없습니다.');
+    }
+
+    if (comment.user.id !== user.id) {
+      throw new ForbiddenException('작성자만 삭제 가능합니다.');
+    }
+
+    await this.repository.remove(comment);
+
+    return '삭제 완료';
   }
 }
