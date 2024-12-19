@@ -10,6 +10,7 @@ import { User } from '@user/entities/user.entity';
 import { CreateCommentDto } from '@comment/dto/create-comment.dto';
 import { BankService } from '@bank/bank.service';
 import { UserService } from '@user/user.service';
+import { UpdateCommentDto } from '@comment/dto/update-comment.dto';
 
 @Injectable()
 export class CommentService {
@@ -85,5 +86,32 @@ export class CommentService {
     await this.repository.remove(comment);
 
     return '삭제 완료';
+  }
+
+  // 수정(작성자 본인만)
+  async updateCommentOnlySelf(
+    user: User,
+    id: string,
+    updateCommentDto: UpdateCommentDto,
+  ): Promise<string> {
+    const comment = await this.repository.findOne({
+      where: {
+        id,
+      },
+      relations: ['user'],
+    });
+
+    if (!comment) {
+      throw new NotFoundException('댓글을 찾을 수 없습니다.');
+    }
+
+    if (comment.user.id !== user.id) {
+      throw new ForbiddenException('작성자만 수정 가능합니다.');
+    }
+
+    Object.assign(comment, updateCommentDto);
+    await this.repository.save(comment);
+
+    return '수정 완료';
   }
 }

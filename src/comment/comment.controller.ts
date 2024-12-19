@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import { RequestUserInterface } from '@auth/interface/requestUser.interface';
 import { CreateCommentDto } from '@comment/dto/create-comment.dto';
 import { TokenGuard } from '@auth/guard/token.guard';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { UpdateCommentDto } from '@comment/dto/update-comment.dto';
 
 @ApiTags('Comment')
 @Controller('comment')
@@ -46,13 +48,29 @@ export class CommentController {
   }
 
   // 댓글 삭제(작성자만)
-  @Delete('/:id')
+  @Delete('/:commentId')
   @UseGuards(TokenGuard)
-  @ApiParam({ name: 'id', description: '댓글 ID' })
+  @ApiParam({ name: 'commentId', description: '댓글 ID' })
   async deleteCommentOnlySelf(
     @Req() req: RequestUserInterface,
-    @Param('id') id: string,
+    @Param('commentId') id: string,
   ) {
     return await this.commentService.deleteCommentOnlySelf(req.user, id);
+  }
+
+  // 댓글 수정(작성자만)
+  @Put('/:commentId')
+  @UseGuards(TokenGuard)
+  @ApiParam({ name: 'commentId', description: '댓글 ID' })
+  async updateCommentOnlySelf(
+    @Req() req: RequestUserInterface,
+    @Param('commentId') id: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ) {
+    return await this.commentService.updateCommentOnlySelf(
+      req.user,
+      id,
+      updateCommentDto,
+    );
   }
 }
