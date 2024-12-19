@@ -48,7 +48,7 @@ export class BankService {
 
   // 은행 상세 조회
   async getBankById(id: string) {
-    const bank = await this.repository.findOneBy({ id: id });
+    const bank = await this.repository.findOneBy({ id });
 
     if (!bank) {
       throw new NotFoundException('찾을 수 없는 계좌입니다.');

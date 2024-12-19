@@ -51,7 +51,7 @@ export class CommentService {
   }
 
   // 조회(은행 ID로 Comment 조회)
-  async findCommentByBankId(bankId: string) {
+  async findCommentByBankId(bankId: string): Promise<Comment[]> {
     const bank = await this.bankService.getBankById(bankId);
 
     const comments = await this.repository.find({

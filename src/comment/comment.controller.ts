@@ -34,14 +34,14 @@ export class CommentController {
   }
 
   // 댓글 조회(유저 ID로 조회)
-  @Get('/:userId')
+  @Get('/user/:userId')
   @ApiParam({ name: 'userId', description: '유저 ID' })
   async findCommentByUserId(@Param('userId') userId: string) {
     return await this.commentService.findCommentByUserId(userId);
   }
 
   // 댓글 조회(은행 ID로 조회)
-  @Get('/:bankId')
+  @Get('/bank/:bankId')
   @ApiParam({ name: 'bankId', description: '은행 ID' })
   async findCommentByBankId(@Param('bankId') bankId: string) {
     return await this.commentService.findCommentByBankId(bankId);
