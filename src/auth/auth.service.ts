@@ -83,16 +83,38 @@ export class AuthService {
   }
 
   // 이메일 OTP 로직
-  async sendEmailOTP(email: string) {
+  async sendEmailOTP(email: string): Promise<string> {
     const num = this.generateOTP();
     // 캐시에 저장
     await this.cache.set(email, num);
 
-    return this.mailService.sendMail({
+    const result = await this.mailService.sendMail({
       to: email,
       subject: '회원님이 요청하신 인증번호 입니다.',
       text: `인증 번호는 ${num} 입니다.`,
     });
+
+    if (result.accepted.length === 0) {
+      throw new HttpException('이메일 전송 실패', HttpStatus.BAD_REQUEST);
+    }
+
+    return '전송 완료';
+  }
+
+  // 이메일 OTP 확인
+  async checkEmailOTP(email: string, code: string): Promise<string> {
+    const otpCode = await this.cache.get(email);
+
+    if (otpCode !== code) {
+      throw new HttpException(
+        'OTP 번호가 일치하지 않습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.cache.del(email);
+
+    return 'OTP 일치';
   }
 
   // 비밀번호 변경 url 이메일 전송 로직

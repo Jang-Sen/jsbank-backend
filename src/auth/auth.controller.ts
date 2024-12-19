@@ -24,6 +24,7 @@ import { UserService } from '@user/user.service';
 import { RefreshTokenGuard } from '@auth/guard/refresh-token.guard';
 import { Response } from 'express';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { EmailValidationDto } from '@user/dto/email-validation.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -171,15 +172,24 @@ export class AuthController {
 
   // 이메일 인증번호 전송 API
   @Post('/email/send')
-  async emailSendOTP(@Body('email') email: string) {
-    return this.authService.sendEmailOTP(email);
+  async emailSendOTP(@Body() dto: EmailDto) {
+    return this.authService.sendEmailOTP(dto.email);
   }
 
+  // 이메일 인증번호 확인 API
+  @Post('/email/check')
+  async emailCheckOTP(@Body() dto: EmailValidationDto) {
+    const { email, code } = dto;
+    return this.authService.checkEmailOTP(email, code);
+  }
+
+  // 비밀번호 찾기 API(이메일로 전송)
   @Post('/find/password')
   async findPassword(@Body() dto: EmailDto) {
     return await this.authService.findPasswordSendEmail(dto.email);
   }
 
+  // 비밀번호 변경 API(이메일로 보낸 토큰으로)
   @Post('/change/password')
   async changePassword(@Body() dto: NewPasswordDto) {
     return await this.userService.changePasswordWithToken(
