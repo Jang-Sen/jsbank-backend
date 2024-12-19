@@ -1,5 +1,6 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { Base } from '@common/entities/base.entity';
+import { Comment } from '@comment/entities/comment.entity';
 
 @Entity()
 export class Bank extends Base {
@@ -14,4 +15,7 @@ export class Bank extends Base {
 
   @Column({ nullable: true })
   public bankImg?: string;
+
+  @OneToMany(() => Comment, (comment) => comment.bank)
+  public comments: Comment[];
 }

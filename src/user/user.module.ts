@@ -5,7 +5,7 @@ import { UserService } from '@user/user.service';
 import { User } from '@user/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { MinioClientModule } from 'minio-client/minio-client.module';
+import { MinioClientModule } from '@minio-client/minio-client.module';
 
 @Module({
   imports: [

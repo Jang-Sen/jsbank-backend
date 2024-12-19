@@ -20,8 +20,8 @@ import { PageOptionsDto } from '@common/dto/page-options.dto';
 import { TokenGuard } from '@auth/guard/token.guard';
 import { CreateUserDto } from '@user/dto/create-user.dto';
 import { RequestUserInterface } from '@auth/interface/requestUser.interface';
-import { BufferedFile } from 'minio-client/interface/file.model';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { BufferedFile } from '@minio-client/interface/file.model';
 
 @ApiTags('User')
 @Controller('user')

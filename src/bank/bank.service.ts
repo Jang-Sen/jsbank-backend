@@ -7,8 +7,8 @@ import { UpdateBankDto } from '@bank/dto/update-bank.dto';
 import { PageDto } from '@common/dto/page.dto';
 import { PageOptionsDto } from '@common/dto/page-options.dto';
 import { PageMetaDto } from '@common/dto/page-meta.dto';
-import { BufferedFile } from 'minio-client/interface/file.model';
-import { MinioClientService } from 'minio-client/minio-client.service';
+import { MinioClientService } from '@minio-client/minio-client.service';
+import { BufferedFile } from '@minio-client/interface/file.model';
 
 @Injectable()
 export class BankService {
@@ -33,6 +33,7 @@ export class BankService {
     }
 
     queryBuilder
+      .leftJoinAndSelect('bank.comments', 'comment')
       .orderBy('bank.createAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);

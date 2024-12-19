@@ -9,11 +9,12 @@ import { MailModule } from '@mail/mail.module';
 import { MailService } from '@mail/mail.service';
 import { AppController } from '@root/app.controller';
 import { AppService } from '@root/app.service';
-import { RedisModule } from './redis/redis.module';
-import { AgreeOfTermModule } from './agree-of-term/agree-of-term.module';
-import { MinioClientModule } from './minio-client/minio-client.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
+import { RedisModule } from '@redis/redis.module';
+import { CommentModule } from '@comment/comment.module';
+import { AgreeOfTermModule } from '@root/agree-of-term/agree-of-term.module';
+import { MinioClientModule } from '@minio-client/minio-client.module';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     RedisModule,
     AgreeOfTermModule,
     MinioClientModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService],

@@ -17,7 +17,7 @@
       "@mail/*": [
         "./src/mail/*"
       ],
-      "minio-client/*": [
+      "@minio-client/*": [
         "./src/minio-client/*"
       ],
       "@user/*": [
@@ -28,6 +28,9 @@
       ],
       "@common/*": [
         "./src/common/*"
+      ],
+      "@comment/*": [
+        "./src/comment/*"
       ],
       "@agree-of-term": [
         "./src/agree-of-term"

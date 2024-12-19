@@ -20,8 +20,8 @@ import { Role } from '@user/entities/role.enum';
 import { PageDto } from '@common/dto/page.dto';
 import { Bank } from '@bank/entities/bank.entity';
 import { PageOptionsDto } from '@common/dto/page-options.dto';
-import { BufferedFile } from 'minio-client/interface/file.model';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { BufferedFile } from '@minio-client/interface/file.model';
 
 @ApiTags('Bank')
 @Controller({ path: 'bank', version: '2' })

@@ -19,8 +19,8 @@ import { CACHE_MANAGER } from '@nestjs/common/cache';
 import { PageDto } from '@common/dto/page.dto';
 import { PageOptionsDto } from '@common/dto/page-options.dto';
 import { PageMetaDto } from '@common/dto/page-meta.dto';
-import { MinioClientService } from 'minio-client/minio-client.service';
-import { BufferedFile } from 'minio-client/interface/file.model';
+import { MinioClientService } from '@minio-client/minio-client.service';
+import { BufferedFile } from '@minio-client/interface/file.model';
 
 @Injectable()
 export class UserService {
@@ -53,6 +53,7 @@ export class UserService {
     }
 
     queryBuilder
+      .leftJoinAndSelect('user.comments', 'comment')
       .leftJoinAndSelect('user.agreeOfTerm', 'agreeOfTerm')
       .orderBy('user.createAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
