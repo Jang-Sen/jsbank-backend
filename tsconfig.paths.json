@@ -20,6 +20,9 @@
       "@minio-client/*": [
         "./src/minio-client/*"
       ],
+      "@movie/*": [
+        "./src/movie/*"
+      ],
       "@user/*": [
         "./src/user/*"
       ],
