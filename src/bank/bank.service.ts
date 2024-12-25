@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Bank } from '@bank/entities/bank.entity';
@@ -9,6 +9,8 @@ import { PageOptionsDto } from '@common/dto/page-options.dto';
 import { PageMetaDto } from '@common/dto/page-meta.dto';
 import { MinioClientService } from '@minio-client/minio-client.service';
 import { BufferedFile } from '@minio-client/interface/file.model';
+import { CACHE_MANAGER } from '@nestjs/common/cache';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class BankService {
@@ -16,11 +18,13 @@ export class BankService {
     @InjectRepository(Bank)
     private repository: Repository<Bank>,
     private readonly minioClientService: MinioClientService,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
   // 은행 전체 조회
   async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Bank>> {
     // return await this.repository.find();
+    const redisProduct = await this.cache.get('bank');
     const queryBuilder = this.repository.createQueryBuilder('bank');
 
     if (pageOptionsDto.keyword) {
@@ -43,7 +47,14 @@ export class BankService {
 
     const pageMetaDto = new PageMetaDto({ pageOptionsDto, itemCount });
 
-    return new PageDto(entities, pageMetaDto);
+    if (redisProduct) {
+      console.log('기존에 데이터가 Redis에 저장되어서 Redis에서 갖고옴');
+      return new PageDto(redisProduct, pageMetaDto);
+    } else {
+      console.log('Redis에 데이터 저장 후, DB에서 갖고온 데이터');
+      await this.cache.set('bank', entities);
+      return new PageDto(entities, pageMetaDto);
+    }
   }
 
   // 은행 상세 조회
@@ -61,6 +72,8 @@ export class BankService {
   async create(dto: CreateBankDto) {
     const bank = this.repository.create(dto);
     await this.repository.save(bank);
+
+    await this.cache.del('bank');
 
     return bank;
   }
