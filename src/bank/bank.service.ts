@@ -24,7 +24,7 @@ export class BankService {
   // 은행 전체 조회
   async getAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Bank>> {
     // return await this.repository.find();
-    const redisProduct = await this.cache.get('bank');
+    const redisProduct: any = await this.cache.get('bank');
     const queryBuilder = this.repository.createQueryBuilder('bank');
 
     if (pageOptionsDto.keyword) {
