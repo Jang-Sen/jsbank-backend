@@ -125,7 +125,7 @@ export class UserService {
   async refreshTokenMatch(userId: string, refreshToken: string) {
     // userId 검사
     const user = await this.getUserBy('id', userId);
-    const userIdFromRedis = await this.cacheManager.get(user.id);
+    const userIdFromRedis: any = await this.cacheManager.get(user.id);
 
     // 암호화된 토큰 검사
     const refreshTokenMatch = await bcrypt.compare(
