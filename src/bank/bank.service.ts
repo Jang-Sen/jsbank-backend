@@ -69,9 +69,19 @@ export class BankService {
   }
 
   // 계좌 생성
-  async create(dto: CreateBankDto) {
+  async create(dto: CreateBankDto, img: BufferedFile) {
     const bank = this.repository.create(dto);
-    await this.repository.save(bank);
+    const savedBank = await this.repository.save(bank);
+
+    if (img) {
+      savedBank.bankImg = await this.minioClientService.uploadBankImg(
+        savedBank,
+        img,
+        'bank',
+      );
+    }
+
+    await this.repository.save(savedBank);
 
     await this.cache.del('bank');
 

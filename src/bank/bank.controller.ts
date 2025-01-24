@@ -43,10 +43,40 @@ export class BankController {
   }
 
   // 계좌 등록 api
-  @ApiBody({ type: CreateBankDto })
   @Post('/create')
-  async create(@Body() dto: CreateBankDto) {
-    return await this.bankService.create(dto);
+  @UseInterceptors(FileInterceptor('img'))
+  @ApiBody({ type: CreateBankDto })
+  @ApiBody({
+    description: '등록 DTO',
+    schema: {
+      type: 'object',
+      properties: {
+        bankName: {
+          type: 'string',
+          description: '은행 이름',
+          example: '신한',
+        },
+        user: {
+          type: 'string',
+          description: '유저 이름',
+          example: '홍길동',
+        },
+        amount: {
+          type: 'number',
+          description: '계좌 금액',
+          example: 50000,
+        },
+        img: {
+          type: 'string',
+          format: 'binary',
+          description: 'bankImg',
+        },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  async create(@Body() dto: CreateBankDto, @UploadedFile() img: BufferedFile) {
+    return await this.bankService.create(dto, img);
   }
 
   // 계좌 삭제 API
@@ -58,7 +88,7 @@ export class BankController {
 
   // 계좌 수정 API
   @Put('/:id')
-  // @UseGuards(RoleGuard(Role.ADMIN))
+  @UseGuards(RoleGuard(Role.ADMIN))
   @UseInterceptors(FileInterceptor('img'))
   @ApiBody({
     description: '수정 DTO',
