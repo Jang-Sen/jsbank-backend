@@ -15,6 +15,8 @@ async function bootstrap() {
 
   // app.setGlobalPrefix('api'); // url api 추가
   app.use(cookieParser()); // cookie 적용
+  app.enableCors(); // 허용된 ip 만 접속 가능하도록 설정
+
   // url 버저닝 적용
   app.enableVersioning({
     type: VersioningType.URI,
@@ -30,6 +32,7 @@ async function bootstrap() {
     .setTitle('js_bank_api')
     .setDescription('js_bank_api')
     .addBearerAuth()
+    .addServer('/api')
     .setVersion('1.0')
     .addTag('bank')
     .build();
